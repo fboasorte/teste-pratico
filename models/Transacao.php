@@ -34,9 +34,9 @@ class Transacao extends \yii\db\ActiveRecord
             [['tipo', 'data_hora', 'conta_origem_numero', 'conta_destino_numero'], 'default', 'value' => null],
             [['tipo', 'data_hora', 'conta_origem_numero', 'conta_destino_numero'], 'integer'],
             [['valor'], 'number'],
-            [['conta_origem_numero'], 'exist', 'skipOnError' => true, 'targetClass' => BancoConta::class, 'targetAttribute' => ['conta_origem_numero' => 'numero']],
-            [['conta_destino_numero'], 'exist', 'skipOnError' => true, 'targetClass' => BancoConta::class, 'targetAttribute' => ['conta_destino_numero' => 'numero']],
-            [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => BancoTipoTransacao::class, 'targetAttribute' => ['tipo' => 'id']],
+            [['conta_origem_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_origem_numero' => 'numero']],
+            [['conta_destino_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_destino_numero' => 'numero']],
+            [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoTransacao::class, 'targetAttribute' => ['tipo' => 'id']],
         ];
     }
 

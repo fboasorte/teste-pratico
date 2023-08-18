@@ -3,6 +3,8 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+use     kartik\datecontrol\Module;
+
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
@@ -11,6 +13,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'timeZone' => 'America/Bahia',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -42,14 +45,18 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'defaultTimeZone' => 'America/Bahia',
+            'currencyCode' => 'BRL',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
@@ -61,6 +68,35 @@ if (YII_ENV_DEV) {
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
+    ];
+    $config['modules']['datecontrol'] = [
+        'class' => 'kartik\datecontrol\Module',
+                'displaySettings' => [
+                    Module::FORMAT_DATE => 'dd/MM/yyyy',
+                    Module::FORMAT_TIME => 'HH:mm',
+                    Module::FORMAT_DATETIME => 'dd/MM/yyyy HH:mm',
+                ],
+                'saveSettings' => [
+                    Module::FORMAT_DATE => 'php:Y-m-d',
+                    Module::FORMAT_TIME => 'php:H:i:s',
+                    Module::FORMAT_DATETIME => 'php:Y-m-d H:i:s',
+                ],
+                // automatically use kartik\widgets for each of the above formats
+                'autoWidget' => true,
+                // converte data entre formatos de displaySettings e saveSettings via chamada ajax.
+                'ajaxConversion' => true,
+                'autoWidgetSettings' => [
+                    Module::FORMAT_DATE => [
+                        'type' => 2,
+                        'pluginOptions' => ['autoclose' => true],
+                        'options' => ['autocomplete' => 'off']
+                    ],
+                    Module::FORMAT_DATETIME => [
+                        'pluginOptions' => ['autoclose' => true],
+                        'options' => ['autocomplete' => 'off']
+                    ],
+                    Module::FORMAT_TIME => [],
+                ],
     ];
 
     $config['bootstrap'][] = 'gii';

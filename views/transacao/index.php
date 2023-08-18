@@ -18,18 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Transacao', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Adicionar Transação', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'tipo',
             'data_hora',
@@ -37,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'conta_origem_numero',
             //'conta_destino_numero',
             [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Transacao $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

@@ -32,8 +32,8 @@ class Conta extends \yii\db\ActiveRecord
             [['tipo', 'cliente_id'], 'default', 'value' => null],
             [['tipo', 'cliente_id'], 'integer'],
             [['saldo'], 'number'],
-            [['cliente_id'], 'exist', 'skipOnError' => true, 'targetClass' => BancoCliente::class, 'targetAttribute' => ['cliente_id' => 'id']],
-            [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => BancoTipoConta::class, 'targetAttribute' => ['tipo' => 'id']],
+            [['cliente_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::class, 'targetAttribute' => ['cliente_id' => 'id']],
+            [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoConta::class, 'targetAttribute' => ['tipo' => 'id']],
         ];
     }
 
@@ -43,10 +43,10 @@ class Conta extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'numero' => 'Numero',
-            'tipo' => 'Tipo',
+            'numero' => 'Número',
+            'tipo' => 'Tipo de Conta',
             'saldo' => 'Saldo',
-            'cliente_id' => 'Cliente ID',
+            'cliente_id' => 'Dono da Conta',
         ];
     }
 }

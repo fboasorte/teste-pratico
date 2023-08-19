@@ -87,6 +87,7 @@ class TransacaoController extends Controller
                 try {
 
                     $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
+                    $model->upload();
                     $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
 
                     if (!$model->save()) {

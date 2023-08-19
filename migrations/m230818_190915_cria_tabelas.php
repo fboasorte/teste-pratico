@@ -75,19 +75,4 @@ class m230818_190915_cria_tabelas extends Migration
         $this->execute("DROP TABLE banco.cliente;");
         $this->execute("DROP SCHEMA banco;");
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m230818_190915_cria_tabelas cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

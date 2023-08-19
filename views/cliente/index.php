@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::begin(); ?>
 
-    <?= 
+    <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -33,7 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nome:ntext',
             'cpf',
-            'endereco:ntext',
+            [
+                'attribute' => 'endereco',
+                'value' => static function ($dataProvider) {
+                    return $dataProvider->endereco ?  $dataProvider->endereco : 'Não definido';
+                },
+                'label' => 'Endereço',
+            ],
             [
                 'attribute' => 'nascimento',
                 'filter' => DatePicker::widget([
@@ -50,12 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Data de Nascimento',
                 'options' => ['style' => 'width:10%'],
             ],
-            'telefone',
+            [
+                'attribute' => 'telefone',
+                'value' => static function ($dataProvider) {
+                    return $dataProvider->telefone ?  $dataProvider->telefone : 'Não definido';
+                },
+                'label' => 'Telefone',
+            ],
             [
                 'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Cliente $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

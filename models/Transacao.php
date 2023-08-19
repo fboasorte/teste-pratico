@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "banco.transacao".
@@ -53,5 +54,15 @@ class Transacao extends \yii\db\ActiveRecord
             'conta_origem_numero' => 'Conta Origem Numero',
             'conta_destino_numero' => 'Conta Destino Numero',
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('arquivos/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

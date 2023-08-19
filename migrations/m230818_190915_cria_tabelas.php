@@ -50,12 +50,13 @@ class m230818_190915_cria_tabelas extends Migration
 
         $this->execute("
         CREATE TABLE banco.transacao (
-            id                  serial PRIMARY KEY,
-            tipo                INTEGER REFERENCES banco.tipo_transacao(id) NOT NULL,
-            data_hora           INTEGER NOT NULL,
-            valor               DECIMAL NOT NULL,
-            conta_origem_numero        INTEGER REFERENCES banco.conta(numero) NOT NULL,
-            conta_destino_numero       INTEGER REFERENCES banco.conta(numero) NOT NULL
+            id                      serial PRIMARY KEY,
+            tipo                    INTEGER REFERENCES banco.tipo_transacao(id) NOT NULL,
+            data_hora               INTEGER NOT NULL,
+            valor                   DECIMAL NOT NULL,
+            conta_origem_numero     INTEGER REFERENCES banco.conta(numero) NOT NULL,
+            conta_destino_numero    INTEGER REFERENCES banco.conta(numero) NOT NULL,
+            comprovante             TEXT
         );
         ");
         return true;

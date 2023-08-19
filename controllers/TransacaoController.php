@@ -4,9 +4,11 @@ namespace app\controllers;
 
 use app\models\Transacao;
 use app\models\TransacaoSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * TransacaoController implements the CRUD actions for Transacao model.
@@ -22,7 +24,7 @@ class TransacaoController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],

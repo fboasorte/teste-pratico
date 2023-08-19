@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use kartik\file\FileInput;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Transacao $model */
@@ -13,11 +15,25 @@ use kartik\select2\Select2;
 
 <div class="transacao-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'tipo')->textInput() ?>
-
-    <?= $form->field($model, 'data_hora')->textInput() ?>
+    <?=
+    $form->field($model, 'tipo')->widget(Select2::class, [
+        'data' =>  ArrayHelper::map(
+            array_filter(
+                (new Query())->select(['tipo_transacao_id' => 'id', 'nome' => 'nome'])
+                    ->from('banco.tipo_transacao')->all(),
+            ),
+            'tipo_transacao_id',
+            'nome'
+        ),
+        'hideSearch' => true,
+        'options' => ['placeholder' => 'Selecione o tipo de transacao...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+        ],
+    ]);
+    ?>
 
     <?= $form->field($model, 'valor')->textInput() ?>
 
@@ -37,7 +53,8 @@ use kartik\select2\Select2;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'conta_destino_numero')->widget(Select2::class, [
+    <?=
+    $form->field($model, 'conta_destino_numero')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
                 (new Query())->select(['cliente_id' => 'id', 'nome' => 'nome'])
@@ -51,10 +68,11 @@ use kartik\select2\Select2;
         'pluginOptions' => [
             'allowClear' => true,
         ],
-    ]); ?>
+    ]);
+    ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

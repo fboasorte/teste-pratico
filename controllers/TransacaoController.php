@@ -84,7 +84,7 @@ class TransacaoController extends Controller
                     throw new \Exception(implode("<br />", \yii\helpers\ArrayHelper::getColumn($model->errors, 0, false)));
                 }
 
-                Yii::$app->session->setFlash('success', 'The model saved successfully.');
+                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
                 return $this->redirect(['view', 'id' => $model->id]);
             } catch (\Exception $ex) {
                 Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
@@ -108,6 +108,7 @@ class TransacaoController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

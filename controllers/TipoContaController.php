@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use app\models\TipoConta;
 use app\models\TipoContaSearch;
 use yii\web\Controller;
@@ -71,6 +72,7 @@ class TipoContaController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -94,6 +96,7 @@ class TipoContaController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

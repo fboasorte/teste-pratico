@@ -65,4 +65,16 @@ class Conta extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Cliente::class, ['id' => 'cliente_id']);
     }
+
+    public function possuiSaldo($valor){
+        if($this->saldo >= $valor){
+            return true;
+        }
+        return false;
+    }
+
+    public function somaValor($valor){
+        $this->saldo += $valor;
+        return $this->save();
+    }
 }

@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use DateTime;
+use Exception;
 
 /**
  * TransacaoController implements the CRUD actions for Transacao model.
@@ -84,19 +85,25 @@ class TransacaoController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $objetoData = new DateTime;
                 $model->data_hora = (int) $objetoData->getTimestamp();
-                try {
 
+                if (!$model->temOrigemEDestinoDiferentes()) {
+                    Yii::$app->session->setFlash('danger', 'Conta de Origem e destinos não podem ser iguais');
+                    return $this->redirect(['create']);
+                }
+
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
                     $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
                     $model->upload();
                     $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
 
-                    if (!$model->save()) {
-                        throw new \Exception(implode("<br />", \yii\helpers\ArrayHelper::getColumn($model->errors, 0, false)));
+                    if ($model->save() && $model->transfereValor()) {
+                        $transaction->commit();
+                        Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                        return $this->redirect(['view', 'id' => $model->id]);
                     }
-
-                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                    return $this->redirect(['view', 'id' => $model->id]);
-                } catch (\Exception $ex) {
+                } catch (Exception $ex) {
+                    $transaction->rollBack();
                     Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
                 }
             }

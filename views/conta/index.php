@@ -22,16 +22,28 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             'numero',
-            'tipo',
-            'saldo',
-            'cliente_id',
+            [
+                'attribute' => 'tipo_conta',
+                'label'     => 'Tipo de Conta',
+                'value' => 'tipoConta.nome',
+            ],
+            [
+                'attribute' => 'saldo',
+                'value' => static function ($dataProvider) {
+                    return 'R$ ' . number_format((float)$dataProvider->saldo, 2, '.', '');
+                },
+            ],
+            [
+                'attribute' => 'cliente',
+                'label'     => 'Cliente',
+                'value' => 'cliente.nome',
+            ],
             [
                 'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Conta $model, $key, $index, $column) {

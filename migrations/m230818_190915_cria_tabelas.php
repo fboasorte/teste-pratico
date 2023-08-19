@@ -42,7 +42,7 @@ class m230818_190915_cria_tabelas extends Migration
         $this->execute("
         CREATE TABLE banco.conta (
             numero              serial PRIMARY KEY,
-            tipo                INTEGER REFERENCES banco.tipo_conta(id) NOT NULL,
+            tipo_conta_id       INTEGER REFERENCES banco.tipo_conta(id) NOT NULL,
             saldo               DECIMAL NOT NULL,
             cliente_id          INTEGER REFERENCES banco.cliente(id) NOT NULL
         );
@@ -51,7 +51,7 @@ class m230818_190915_cria_tabelas extends Migration
         $this->execute("
         CREATE TABLE banco.transacao (
             id                      serial PRIMARY KEY,
-            tipo                    INTEGER REFERENCES banco.tipo_transacao(id) NOT NULL,
+            tipo_transacao_id       INTEGER REFERENCES banco.tipo_transacao(id) NOT NULL,
             data_hora               INTEGER NOT NULL,
             valor                   DECIMAL NOT NULL,
             conta_origem_numero     INTEGER REFERENCES banco.conta(numero) NOT NULL,

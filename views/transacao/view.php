@@ -31,11 +31,37 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'tipo',
-            'data_hora',
-            'valor',
-            'conta_origem_numero',
-            'conta_destino_numero',
+            [
+                'label' => 'Tipo',
+                'format' => 'html',
+                'value' => $model->tipoTransacao->nome,
+            ],
+            [
+                'attribute' => 'data_hora',
+                'value' => static function ($model) {
+                    return Yii::$app->formatter->asDate($model->data_hora, 'dd/MM/Y H:mm');
+                },
+                'label' => 'Data/Hora',
+                'options' => ['style' => 'width:10%'],
+            ],
+            [
+                'attribute' => 'valor',
+                'value' => static function ($model) {
+                    return 'R$ ' . number_format((float)$model->valor, 2, '.', '');
+                },
+            ],
+            [
+                'attribute' => 'conta_origem_numero',
+                'value' => static function ($model) {
+                    return $model->conta_origem_numero . ' / ' . $model->contaOrigem->cliente->nome;
+                },
+            ],
+            [
+                'attribute' => 'conta_destino_numero',
+                'value' => static function ($model) {
+                    return $model->conta_destino_numero . ' / ' . $model->contaDestino->cliente->nome;
+                },
+            ],
         ],
     ]) ?>
 

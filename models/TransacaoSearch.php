@@ -11,14 +11,17 @@ use app\models\Transacao;
  */
 class TransacaoSearch extends Transacao
 {
+    public $tipo_transacao;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'tipo', 'data_hora', 'conta_origem_numero', 'conta_destino_numero'], 'integer'],
+            [['id', 'tipo_transacao_id', 'data_hora', 'conta_origem_numero', 'conta_destino_numero'], 'integer'],
             [['valor'], 'number'],
+            [['tipo_transacao'], 'safe']
         ];
     }
 
@@ -40,13 +43,19 @@ class TransacaoSearch extends Transacao
      */
     public function search($params)
     {
-        $query = Transacao::find();
+        $query = Transacao::find()
+            ->joinWith('tipoTransacao');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['tipo_transacao'] = [
+            'asc'  => ['tipo_transacao.nome' => SORT_ASC],
+            'desc' => ['tipo_transacao.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -59,12 +68,15 @@ class TransacaoSearch extends Transacao
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'tipo' => $this->tipo,
+            'tipo_transacao_id' => $this->tipo_transacao_id,
             'data_hora' => $this->data_hora,
             'valor' => $this->valor,
             'conta_origem_numero' => $this->conta_origem_numero,
             'conta_destino_numero' => $this->conta_destino_numero,
         ]);
+
+        $query->andFilterWhere(['ilike', 'banco.tipo_transacao.nome', $this->tipo_transacao]);
+        
 
         return $dataProvider;
     }

@@ -31,9 +31,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'numero',
-            'tipo',
+            [
+                'label' => 'Tipo',
+                'format' => 'html',
+                'value' => $model->tipoConta->nome,
+            ],
             'saldo',
-            'cliente_id',
+            [
+                'label' => 'Cliente',
+                'format' => 'html',
+                'value' => $model->cliente->nome,
+            ],
         ],
     ]) ?>
 

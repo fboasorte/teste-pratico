@@ -16,7 +16,7 @@ use yii\db\Query;
     <?php $form = ActiveForm::begin(); ?>
 
     <?=
-    $form->field($model, 'tipo')->widget(Select2::class, [
+    $form->field($model, 'tipo_conta_id')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
                 (new Query())->select(['tipo_conta_id' => 'id', 'nome' => 'nome'])

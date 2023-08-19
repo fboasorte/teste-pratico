@@ -11,14 +11,18 @@ use app\models\Conta;
  */
 class ContaSearch extends Conta
 {
+    public $tipo_conta;
+    public $cliente;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['numero', 'tipo', 'cliente_id'], 'integer'],
+            [['numero', 'tipo_conta_id', 'cliente_id'], 'integer'],
             [['saldo'], 'number'],
+            [['tipo_conta', 'cliente'], 'safe']
         ];
     }
 
@@ -40,13 +44,25 @@ class ContaSearch extends Conta
      */
     public function search($params)
     {
-        $query = Conta::find();
+        $query = Conta::find()
+            ->joinWith('tipoConta')
+            ->joinWith('cliente');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['tipo_conta'] = [
+            'asc'  => ['tipo_conta.nome' => SORT_ASC],
+            'desc' => ['tipo_conta.nome' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['cliente'] = [
+            'asc'  => ['cliente.nome' => SORT_ASC],
+            'desc' => ['cliente.nome' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -59,10 +75,14 @@ class ContaSearch extends Conta
         // grid filtering conditions
         $query->andFilterWhere([
             'numero' => $this->numero,
-            'tipo' => $this->tipo,
+            'tipo_conta_id' => $this->tipo_conta_id,
             'saldo' => $this->saldo,
             'cliente_id' => $this->cliente_id,
         ]);
+
+        $query->andFilterWhere(['ilike', 'banco.tipo_conta.nome', $this->tipo_conta]);
+        $query->andFilterWhere(['ilike', 'banco.cliente.nome', $this->cliente]);
+        
 
         return $dataProvider;
     }

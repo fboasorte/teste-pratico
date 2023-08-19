@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "banco.conta".
  *
  * @property int $numero
- * @property int $tipo
+ * @property int $tipo_conta_id
  * @property float $saldo
  * @property int $cliente_id
  */
@@ -28,12 +28,12 @@ class Conta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tipo', 'saldo', 'cliente_id'], 'required'],
-            [['tipo', 'cliente_id'], 'default', 'value' => null],
-            [['tipo', 'cliente_id'], 'integer'],
+            [['tipo_conta_id', 'saldo', 'cliente_id'], 'required'],
+            [['tipo_conta_id', 'cliente_id'], 'default', 'value' => null],
+            [['tipo_conta_id', 'cliente_id'], 'integer'],
             [['saldo'], 'number'],
             [['cliente_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::class, 'targetAttribute' => ['cliente_id' => 'id']],
-            [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoConta::class, 'targetAttribute' => ['tipo' => 'id']],
+            [['tipo_conta_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoConta::class, 'targetAttribute' => ['tipo_conta_id' => 'id']],
         ];
     }
 
@@ -44,9 +44,25 @@ class Conta extends \yii\db\ActiveRecord
     {
         return [
             'numero' => 'Número',
-            'tipo' => 'Tipo de Conta',
+            'tipo_conta_id' => 'Tipo de Conta',
             'saldo' => 'Saldo',
             'cliente_id' => 'Dono da Conta',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTipoConta()
+    {
+        return $this->hasOne(TipoConta::class, ['id' => 'tipo_conta_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCliente()
+    {
+        return $this->hasOne(Cliente::class, ['id' => 'cliente_id']);
     }
 }

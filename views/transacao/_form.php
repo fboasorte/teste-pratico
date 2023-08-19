@@ -18,7 +18,7 @@ use yii\helpers\Url;
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?=
-    $form->field($model, 'tipo')->widget(Select2::class, [
+    $form->field($model, 'tipo_transacao_id')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
                 (new Query())->select(['tipo_transacao_id' => 'id', 'nome' => 'nome'])

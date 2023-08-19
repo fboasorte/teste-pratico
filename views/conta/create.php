@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Conta $model */
 
-$this->title = 'Create Conta';
+$this->title = 'Adicionar Conta';
 $this->params['breadcrumbs'][] = ['label' => 'Contas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

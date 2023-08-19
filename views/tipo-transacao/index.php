@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /** @var app\models\TipoTransacaoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Tipo Transacaos';
+$this->title = 'Tipo Transações';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tipo-transacao-index">

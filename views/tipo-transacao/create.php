@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\TipoTransacao $model */
 
-$this->title = 'Create Tipo Transacao';
+$this->title = 'Adicionar Tipo de Transação';
 $this->params['breadcrumbs'][] = ['label' => 'Tipo Transacaos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

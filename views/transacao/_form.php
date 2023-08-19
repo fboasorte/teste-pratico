@@ -29,7 +29,7 @@ use yii\helpers\Url;
             'nome'
         ),
         'hideSearch' => true,
-        'options' => ['placeholder' => 'Selecione o tipo de transacao...'],
+        'options' => ['placeholder' => 'Selecione o tipo de transação...'],
         'pluginOptions' => [
             'allowClear' => true,
         ],

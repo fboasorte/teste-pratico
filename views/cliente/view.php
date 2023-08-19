@@ -42,7 +42,11 @@ $formatter = new Formatter();
                 'format' => 'html',
                 'value' => Yii::$app->formatter->asDate($model->nascimento, 'dd/MM/Y'),
             ],
-            'telefone',
+            [
+                'label' => 'Telefone',
+                'format' => 'html',
+                'value' => $model->telefone ? $model->telefone : 'Não cadastrado',
+            ],
         ],
     ]) ?>
 

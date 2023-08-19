@@ -54,8 +54,8 @@ class Transacao extends \yii\db\ActiveRecord
             'tipo_transacao_id' => 'Tipo',
             'data_hora' => 'Data Hora',
             'valor' => 'Valor',
-            'conta_origem_numero' => 'Conta Origem Numero',
-            'conta_destino_numero' => 'Conta Destino Numero',
+            'conta_origem_numero' => 'Conta Origem',
+            'conta_destino_numero' => 'Conta Destino',
         ];
     }
 

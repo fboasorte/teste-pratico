@@ -67,8 +67,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     return 'R$ ' . number_format((float)$dataProvider->valor, 2, '.', '');
                 },
             ],
-            'conta_origem_numero',
-            'conta_destino_numero',
+            [
+                'attribute' => 'conta_origem_numero',
+                'value' => static function ($dataProvider) {
+                    return $dataProvider->conta_origem_numero . ' / ' . $dataProvider->contaOrigem->cliente->nome;
+                },
+            ],
+            [
+                'attribute' => 'conta_destino_numero',
+                'value' => static function ($dataProvider) {
+                    return $dataProvider->conta_destino_numero . ' / ' . $dataProvider->contaDestino->cliente->nome;
+                },
+            ],
             [
                 'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Transacao $model, $key, $index, $column) {

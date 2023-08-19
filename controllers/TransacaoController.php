@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use DateTime;
 
 /**
  * TransacaoController implements the CRUD actions for Transacao model.
@@ -67,16 +68,48 @@ class TransacaoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
+    // public function actionCreate()
+    // {
+    //     $model = new Transacao();
+
+    //     if ($this->request->isPost) {
+    //         if ($model->load($this->request->post()) && $model->save()) {
+    //             return $this->redirect(['view', 'id' => $model->id]);
+    //         }
+    //     } else {
+    //         $model->loadDefaultValues();
+    //     }
+
+    //     return $this->render('create', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
     public function actionCreate()
     {
         $model = new Transacao();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $objetoData = new DateTime;        
+            $model->data_hora = (int) $objetoData->getTimestamp();
+            try {
+
+                //save the new urls
+                if (!$model->save()) {
+                    throw new \Exception(implode("<br />", \yii\helpers\ArrayHelper::getColumn($model->errors, 0, false)));
+                }
+
+                //Upload Images
+                $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
+                $model->upload();
+
+                //commit the transatction to save the record in the table
+
+                Yii::$app->session->setFlash('success', 'The model saved successfully.');
                 return $this->redirect(['view', 'id' => $model->id]);
+            } catch (\Exception $ex) {
+                Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
         return $this->render('create', [

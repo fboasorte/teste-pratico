@@ -17,6 +17,8 @@ use yii\web\UploadedFile;
  */
 class Transacao extends \yii\db\ActiveRecord
 {
+    public $arquivo;
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +40,7 @@ class Transacao extends \yii\db\ActiveRecord
             [['conta_origem_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_origem_numero' => 'numero']],
             [['conta_destino_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_destino_numero' => 'numero']],
             [['tipo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoTransacao::class, 'targetAttribute' => ['tipo' => 'id']],
+            [['comprovante'], 'file']
         ];
     }
 
@@ -59,7 +62,7 @@ class Transacao extends \yii\db\ActiveRecord
     public function upload()
     {
         if ($this->validate()) {
-            $this->imageFile->saveAs('arquivos/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->arquivo->saveAs(Yii::getAlias('@arquivos') . '/' . $this->arquivo->baseName . '.' . $this->arquivo->extension);
             return true;
         } else {
             return false;

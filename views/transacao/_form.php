@@ -71,6 +71,10 @@ use yii\helpers\Url;
     ]);
     ?>
 
+    <?= 
+    $form->field($model, 'comprovante')->widget(FileInput::class);
+    ?>
+
     <div class="form-group">
         <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
         <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-default']) ?>

@@ -7,6 +7,8 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use kartik\date\DatePicker;
+use yii\helpers\ArrayHelper;
+use yii\db\Query;
 
 /** @var yii\web\View $this */
 /** @var app\models\TransacaoSearch $searchModel */
@@ -31,9 +33,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             [
-                'attribute' => 'tipo_transacao',
+                'attribute' => 'tipo_transacao_id',
                 'label'     => 'Tipo de Transação',
                 'value' => 'tipoTransacao.nome',
+                'filter' => ArrayHelper::map(
+                    array_filter(
+                        (new Query())->select(['tipo_transacao_id' => 'id', 'nome' => 'nome'])
+                            ->from('banco.tipo_transacao')->all(),
+                    ),
+                    'tipo_transacao_id',
+                    'nome'
+                )
             ],
             [
                 'attribute' => 'data_hora',

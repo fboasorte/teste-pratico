@@ -75,12 +75,12 @@ class ContaSearch extends Conta
         // grid filtering conditions
         $query->andFilterWhere([
             'numero' => $this->numero,
-            'tipo_conta_id' => $this->tipo_conta_id,
             'saldo' => $this->saldo,
             'cliente_id' => $this->cliente_id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'banco.tipo_conta.nome', $this->tipo_conta]);
+        $query->andFilterWhere(['=', 'tipo_conta_id', $this->tipo_conta_id]);
+
         $query->andFilterWhere(['ilike', 'banco.cliente.nome', $this->cliente]);
         
 

@@ -39,13 +39,17 @@ class ClienteController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ClienteSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        if (Yii::$app->user->can('gestorCliente')) {
+            $searchModel = new ClienteSearch();
+            $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -56,9 +60,13 @@ class ClienteController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if (Yii::$app->user->can('gestorCliente')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -68,20 +76,24 @@ class ClienteController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Cliente();
+        if (Yii::$app->user->can('gestorCliente')) {
+            $model = new Cliente();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -93,16 +105,20 @@ class ClienteController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('gestorCliente')) {
+            $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -114,9 +130,13 @@ class ClienteController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can('gestorCliente')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**

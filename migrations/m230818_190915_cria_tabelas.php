@@ -18,7 +18,7 @@ class m230818_190915_cria_tabelas extends Migration
         CREATE TABLE banco.cliente (
             id              serial PRIMARY KEY,
             nome            TEXT NOT NULL,
-            cpf             CHAR(11) NOT NULL,
+            cpf             CHAR(11) UNIQUE NOT NULL,
             endereco        TEXT,
             nascimento      date,
             telefone        INTEGER
@@ -59,6 +59,7 @@ class m230818_190915_cria_tabelas extends Migration
             comprovante             TEXT
         );
         ");
+
         return true;
     }
 

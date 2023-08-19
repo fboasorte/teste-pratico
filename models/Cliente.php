@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yiibr\brvalidator\CpfValidator;
 
 /**
  * This is the model class for table "banco.cliente".
@@ -36,6 +37,7 @@ class Cliente extends \yii\db\ActiveRecord
             [['telefone'], 'default', 'value' => null],
             [['telefone'], 'integer'],
             [['cpf'], 'string', 'max' => 11],
+            [['cpf'], CpfValidator::class],
         ];
     }
 

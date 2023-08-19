@@ -41,13 +41,17 @@ class TransacaoController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TransacaoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        if (Yii::$app->user->can('gestorTransacao')) {
+            $searchModel = new TransacaoSearch();
+            $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -58,9 +62,13 @@ class TransacaoController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if (Yii::$app->user->can('gestorTransacao')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -70,30 +78,34 @@ class TransacaoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Transacao();
+        if (Yii::$app->user->can('gestorTransacao')) {
+            $model = new Transacao();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $objetoData = new DateTime;
-            $model->data_hora = (int) $objetoData->getTimestamp();
-            try {
+            if ($model->load(Yii::$app->request->post())) {
+                $objetoData = new DateTime;
+                $model->data_hora = (int) $objetoData->getTimestamp();
+                try {
 
-                $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
-                $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
+                    $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
+                    $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
 
-                if (!$model->save()) {
-                    throw new \Exception(implode("<br />", \yii\helpers\ArrayHelper::getColumn($model->errors, 0, false)));
+                    if (!$model->save()) {
+                        throw new \Exception(implode("<br />", \yii\helpers\ArrayHelper::getColumn($model->errors, 0, false)));
+                    }
+
+                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } catch (\Exception $ex) {
+                    Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
                 }
-
-                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                return $this->redirect(['view', 'id' => $model->id]);
-            } catch (\Exception $ex) {
-                Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
             }
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -105,16 +117,20 @@ class TransacaoController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('gestorTransacao')) {
+            $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -126,9 +142,13 @@ class TransacaoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can('gestorTransacao')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**

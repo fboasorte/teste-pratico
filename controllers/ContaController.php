@@ -39,13 +39,17 @@ class ContaController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ContaSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        if (Yii::$app->user->can('gestorTipoConta')) {
+            $searchModel = new ContaSearch();
+            $dataProvider = $searchModel->search($this->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -56,9 +60,13 @@ class ContaController extends Controller
      */
     public function actionView($numero)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($numero),
-        ]);
+        if (Yii::$app->user->can('gestorTipoConta')) {
+            return $this->render('view', [
+                'model' => $this->findModel($numero),
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -68,20 +76,24 @@ class ContaController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Conta();
+        if (Yii::$app->user->can('gestorTipoConta')) {
+            $model = new Conta();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                return $this->redirect(['view', 'numero' => $model->numero]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
+                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                    return $this->redirect(['view', 'numero' => $model->numero]);
+                }
+            } else {
+                $model->loadDefaultValues();
             }
-        } else {
-            $model->loadDefaultValues();
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**
@@ -93,16 +105,20 @@ class ContaController extends Controller
      */
     public function actionUpdate($numero)
     {
-        $model = $this->findModel($numero);
+        if (Yii::$app->user->can('gestorTipoConta')) {
+            $model = $this->findModel($numero);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-            return $this->redirect(['view', 'numero' => $model->numero]);
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+                return $this->redirect(['view', 'numero' => $model->numero]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->redirect(['error']);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -114,9 +130,13 @@ class ContaController extends Controller
      */
     public function actionDelete($numero)
     {
-        $this->findModel($numero)->delete();
+        if (Yii::$app->user->can('gestorTipoConta')) {
+            $this->findModel($numero)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        } else {
+            return $this->redirect(['error']);
+        }
     }
 
     /**

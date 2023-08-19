@@ -27,6 +27,7 @@ $formatter = new Formatter();
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-default']) ?>
     </p>
 
     <?= DetailView::widget([
@@ -39,7 +40,6 @@ $formatter = new Formatter();
             [
                 'label' => 'Data de Nascimento',
                 'format' => 'html',
-                // 'value' => $model->nascimento,
                 'value' => Yii::$app->formatter->asDate($model->nascimento, 'dd/MM/Y'),
             ],
             'telefone',

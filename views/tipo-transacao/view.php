@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-default']) ?>
     </p>
 
     <?= DetailView::widget([

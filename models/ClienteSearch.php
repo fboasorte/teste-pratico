@@ -17,8 +17,8 @@ class ClienteSearch extends Cliente
     public function rules()
     {
         return [
-            [['id', 'telefone'], 'integer'],
-            [['nome', 'cpf', 'endereco', 'nascimento'], 'safe'],
+            [['id'], 'integer'],
+            [['nome', 'cpf', 'endereco', 'nascimento', 'telefone'], 'safe'],
         ];
     }
 

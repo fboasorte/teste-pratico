@@ -21,7 +21,7 @@ class m230818_190915_cria_tabelas extends Migration
             cpf             CHAR(11) UNIQUE NOT NULL,
             endereco        TEXT,
             nascimento      date,
-            telefone        INTEGER
+            telefone        CHAR(11)
         );
         ");
 

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Conta;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\db\Query;
@@ -40,10 +41,10 @@ use yii\helpers\Url;
     <?= $form->field($model, 'conta_origem_numero')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['cliente_id' => 'id', 'nome' => 'nome'])
-                    ->from('banco.cliente')->all(),
+                (new Query())->select(['conta_numero' => 'numero', 'nome' => 'nome'])
+                    ->from('banco.conta')->join('inner join', 'banco.cliente', 'cliente_id = id')->all(),
             ),
-            'cliente_id',
+            'conta_numero',
             'nome'
         ),
         'hideSearch' => true,
@@ -57,10 +58,10 @@ use yii\helpers\Url;
     $form->field($model, 'conta_destino_numero')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['cliente_id' => 'id', 'nome' => 'nome'])
-                    ->from('banco.cliente')->all(),
+                (new Query())->select(['conta_numero' => 'numero', 'nome' => 'nome'])
+                    ->from('banco.conta')->join('inner join', 'banco.cliente', 'cliente_id = id')->all(),
             ),
-            'cliente_id',
+            'conta_numero',
             'nome'
         ),
         'hideSearch' => true,
@@ -71,7 +72,7 @@ use yii\helpers\Url;
     ]);
     ?>
 
-    <?= 
+    <?=
     $form->field($model, 'comprovante')->widget(FileInput::class);
     ?>
 

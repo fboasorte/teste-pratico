@@ -35,7 +35,7 @@ class Cliente extends \yii\db\ActiveRecord
             [['nome', 'endereco'], 'string'],
             [['nascimento'], 'safe'],
             [['telefone'], 'default', 'value' => null],
-            [['telefone'], 'integer'],
+            [['telefone'], 'string', 'max' => 11],
             [['cpf'], 'string', 'max' => 11],
             [['cpf'], CpfValidator::class],
         ];
@@ -50,7 +50,7 @@ class Cliente extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'nome' => Yii::t('app', 'Nome'),
             'cpf' => Yii::t('app', 'CPF'),
-            'endereco' => Yii::t('app', 'Endereco'),
+            'endereco' => Yii::t('app', 'Endereço'),
             'nascimento' => Yii::t('app', 'Nascimento'),
             'telefone' => Yii::t('app', 'Telefone'),
         ];

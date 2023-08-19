@@ -40,7 +40,7 @@ class Transacao extends \yii\db\ActiveRecord
             [['conta_origem_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_origem_numero' => 'numero']],
             [['conta_destino_numero'], 'exist', 'skipOnError' => true, 'targetClass' => Conta::class, 'targetAttribute' => ['conta_destino_numero' => 'numero']],
             [['tipo_transacao_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoTransacao::class, 'targetAttribute' => ['tipo_transacao_id' => 'id']],
-            [['comprovante'], 'file']
+            [['comprovante'], 'file', 'extensions' => 'pdf']
         ];
     }
 

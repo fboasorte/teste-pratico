@@ -93,20 +93,31 @@ class Transacao extends \yii\db\ActiveRecord
         }
     }
 
-    public function temOrigemEDestinoDiferentes(){
-        if($this->conta_origem_numero != $this->conta_destino_numero){
+    public function temOrigemEDestinoDiferentes()
+    {
+        if ($this->conta_origem_numero != $this->conta_destino_numero) {
             return true;
         }
         return false;
     }
 
-    public function transfereValor(){
+    public function transfereValor()
+    {
         $contaOrigem = Conta::findOne(['numero' => $this->conta_origem_numero]);
         $contaDestino = Conta::findOne(['numero' => $this->conta_destino_numero]);
 
-        if($contaOrigem->somaValor(-$this->valor) && $contaDestino->somaValor($this->valor)){
+        if (
+            $contaOrigem->possuiSaldo($this->valor)
+            && $contaOrigem->somaValor(-$this->valor)
+            && $contaDestino->somaValor($this->valor)
+        ) {
             return true;
         }
         return false;
+    }
+
+    public function podeSerRealizada(){
+        $contaOrigem = Conta::findOne(['numero' => $this->conta_origem_numero]);
+        return $contaOrigem->possuiSaldo($this->valor);
     }
 }

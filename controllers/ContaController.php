@@ -39,7 +39,7 @@ class ContaController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->can('gestorTipoConta')) {
+        if (Yii::$app->user->can('gestorConta')) {
             $searchModel = new ContaSearch();
             $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -60,7 +60,7 @@ class ContaController extends Controller
      */
     public function actionView($numero)
     {
-        if (Yii::$app->user->can('gestorTipoConta')) {
+        if (Yii::$app->user->can('gestorConta')) {
             return $this->render('view', [
                 'model' => $this->findModel($numero),
             ]);
@@ -76,7 +76,7 @@ class ContaController extends Controller
      */
     public function actionCreate()
     {
-        if (Yii::$app->user->can('gestorTipoConta')) {
+        if (Yii::$app->user->can('gestorConta')) {
             $model = new Conta();
 
             if ($this->request->isPost) {
@@ -105,7 +105,7 @@ class ContaController extends Controller
      */
     public function actionUpdate($numero)
     {
-        if (Yii::$app->user->can('gestorTipoConta')) {
+        if (Yii::$app->user->can('gestorConta')) {
             $model = $this->findModel($numero);
 
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -130,7 +130,7 @@ class ContaController extends Controller
      */
     public function actionDelete($numero)
     {
-        if (Yii::$app->user->can('gestorTipoConta')) {
+        if (Yii::$app->user->can('gestorConta')) {
             $this->findModel($numero)->delete();
 
             return $this->redirect(['index']);

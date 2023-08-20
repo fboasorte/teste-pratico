@@ -91,6 +91,11 @@ class TransacaoController extends Controller
                     return $this->redirect(['create']);
                 }
 
+                if (!$model->podeSerRealizada()) {
+                    Yii::$app->session->setFlash('danger', 'A conta não tem saldo suficiente');
+                    return $this->redirect(['create']);
+                }
+
                 $transaction = Yii::$app->db->beginTransaction();
                 try {
                     $model->arquivo = UploadedFile::getInstance($model, 'comprovante');

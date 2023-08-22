@@ -10,10 +10,38 @@ class m230819_180707_cria_permissoes extends Migration
     public $data;
 
     public $rotas_tipo_conta = [
-        '/tipo-conta/index',
-        '/tipo-conta/update',
-        '/tipo-conta/create',
-        '/tipo-conta/view',
+        'tipo-conta/index',
+        'tipo-conta/update',
+        'tipo-conta/create',
+        'tipo-conta/view',
+    ];
+
+    public $rotas_tipo_transacao = [
+        'tipo-transacao/index',
+        'tipo-transacao/update',
+        'tipo-transacao/create',
+        'tipo-transacao/view',
+    ];
+
+    public $rotas_conta = [
+        'conta/index',
+        'conta/update',
+        'conta/create',
+        'conta/view',
+    ];
+
+    public $rotas_cliente = [
+        'cliente/index',
+        'cliente/update',
+        'cliente/create',
+        'cliente/view',
+    ];
+
+    public $rotas_transacao = [
+        'transacao/index',
+        'transacao/update',
+        'transacao/create',
+        'transacao/view',
     ];
 
     /**
@@ -115,6 +143,31 @@ class m230819_180707_cria_permissoes extends Migration
             'updated_at' => $this->data
         ]);
 
+        foreach ($this->rotas_tipo_conta as $rota) {
+            $this->insert('auth_item', ['name' => $rota, 'type' => 2, 'description' => 'Rota',
+                'created_at' => $this->data, 'updated_at' => $this->data]);
+        }
+
+        foreach ($this->rotas_tipo_transacao as $rota) {
+            $this->insert('auth_item', ['name' => $rota, 'type' => 2, 'description' => 'Rota',
+                'created_at' => $this->data, 'updated_at' => $this->data]);
+        }
+
+        foreach ($this->rotas_cliente as $rota) {
+            $this->insert('auth_item', ['name' => $rota, 'type' => 2, 'description' => 'Rota',
+                'created_at' => $this->data, 'updated_at' => $this->data]);
+        }
+
+        foreach ($this->rotas_conta as $rota) {
+            $this->insert('auth_item', ['name' => $rota, 'type' => 2, 'description' => 'Rota',
+                'created_at' => $this->data, 'updated_at' => $this->data]);
+        }
+
+        foreach ($this->rotas_transacao as $rota) {
+            $this->insert('auth_item', ['name' => $rota, 'type' => 2, 'description' => 'Rota',
+                'created_at' => $this->data, 'updated_at' => $this->data]);
+        }
+
         /*Assign*/
         $this->insert('auth_assignment', [
             'item_name' => 'demo',
@@ -141,6 +194,31 @@ class m230819_180707_cria_permissoes extends Migration
         $this->insert('auth_item_child', ['parent' => 'demo', 'child' => 'gestorConta']);
 
         $this->insert('auth_item_child', ['parent' => 'demo', 'child' => 'gestorTransacao']);
+
+        foreach ($this->rotas_tipo_conta as $rota) {
+            $this->batchInsert('auth_item_child', ['parent', 'child'], [
+            ['gestorTipoConta', $rota],]);
+        }
+
+        foreach ($this->rotas_tipo_transacao as $rota) {
+            $this->batchInsert('auth_item_child', ['parent', 'child'], [
+            ['gestorTipoTransacao', $rota],]);
+        }
+
+        foreach ($this->rotas_cliente as $rota) {
+            $this->batchInsert('auth_item_child', ['parent', 'child'], [
+            ['gestorCliente', $rota],]);
+        }
+
+        foreach ($this->rotas_conta as $rota) {
+            $this->batchInsert('auth_item_child', ['parent', 'child'], [
+            ['gestorConta', $rota],]);
+        }
+
+        foreach ($this->rotas_transacao as $rota) {
+            $this->batchInsert('auth_item_child', ['parent', 'child'], [
+            ['gestorTransacao', $rota],]);
+        }
     }
 
     /**

@@ -11,6 +11,12 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use DateTime;
 use Exception;
+use lib\behaviors\AccessControl;
+
+// TODO: 
+// - Salvar o nome do arquivo como hash
+// - Permitir editar o arquivo no alterar transacao
+// - Tratar os diferentes tipos de transacao(deposito, transferencia, saque)
 
 /**
  * TransacaoController implements the CRUD actions for Transacao model.
@@ -31,6 +37,9 @@ class TransacaoController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                ],
             ]
         );
     }
@@ -42,17 +51,13 @@ class TransacaoController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->can('gestorTransacao')) {
-            $searchModel = new TransacaoSearch();
-            $dataProvider = $searchModel->search($this->request->queryParams);
+        $searchModel = new TransacaoSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -63,13 +68,9 @@ class TransacaoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->user->can('gestorTransacao')) {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
@@ -79,46 +80,42 @@ class TransacaoController extends Controller
      */
     public function actionCreate()
     {
-        if (Yii::$app->user->can('gestorTransacao')) {
-            $model = new Transacao();
+        $model = new Transacao();
 
-            if ($model->load(Yii::$app->request->post())) {
-                $objetoData = new DateTime;
-                $model->data_hora = (int) $objetoData->getTimestamp();
+        if ($model->load(Yii::$app->request->post())) {
+            $objetoData = new DateTime;
+            $model->data_hora = (int) $objetoData->getTimestamp();
 
-                if (!$model->temOrigemEDestinoDiferentes()) {
-                    Yii::$app->session->setFlash('danger', 'Conta de Origem e destinos não podem ser iguais');
-                    return $this->redirect(['create']);
-                }
-
-                if (!$model->podeSerRealizada()) {
-                    Yii::$app->session->setFlash('danger', 'A conta não tem saldo suficiente');
-                    return $this->redirect(['create']);
-                }
-
-                $transaction = Yii::$app->db->beginTransaction();
-                try {
-                    $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
-                    $model->upload();
-                    $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
-
-                    if ($model->save() && $model->transfereValor()) {
-                        $transaction->commit();
-                        Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $ex) {
-                    $transaction->rollBack();
-                    Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
-                }
+            if (!$model->temOrigemEDestinoDiferentes()) {
+                Yii::$app->session->setFlash('danger', 'Conta de Origem e destinos não podem ser iguais');
+                return $this->redirect(['create']);
             }
 
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        } else {
-            return $this->redirect(['error']);
+            if (!$model->podeSerRealizada()) {
+                Yii::$app->session->setFlash('danger', 'A conta não tem saldo suficiente');
+                return $this->redirect(['create']);
+            }
+
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
+                $model->upload();
+                $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
+
+                if ($model->save() && $model->transfereValor()) {
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } catch (Exception $ex) {
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', Yii::t('app', $ex->getMessage()));
+            }
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -130,20 +127,16 @@ class TransacaoController extends Controller
      */
     public function actionUpdate($id)
     {
-        if (Yii::$app->user->can('gestorTransacao')) {
-            $model = $this->findModel($id);
+        $model = $this->findModel($id);
 
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        } else {
-            return $this->redirect(['error']);
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -155,13 +148,9 @@ class TransacaoController extends Controller
      */
     public function actionDelete($id)
     {
-        if (Yii::$app->user->can('gestorTransacao')) {
-            $this->findModel($id)->delete();
-            Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
-            return $this->redirect(['index']);
-        } else {
-            return $this->redirect(['error']);
-        }
+        $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
+        return $this->redirect(['index']);
     }
 
     /**

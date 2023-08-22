@@ -8,6 +8,7 @@ use app\models\TipoTransacaoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use lib\behaviors\AccessControl;
 
 /**
  * TipoTransacaoController implements the CRUD actions for TipoTransacao model.
@@ -28,6 +29,9 @@ class TipoTransacaoController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                ],
             ]
         );
     }
@@ -39,17 +43,13 @@ class TipoTransacaoController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->can('gestorTipoTransacao')) {
-            $searchModel = new TipoTransacaoSearch();
-            $dataProvider = $searchModel->search($this->request->queryParams);
+        $searchModel = new TipoTransacaoSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -60,13 +60,9 @@ class TipoTransacaoController extends Controller
      */
     public function actionView($id)
     {
-        if (Yii::$app->user->can('gestorTipoTransacao')) {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
@@ -76,24 +72,20 @@ class TipoTransacaoController extends Controller
      */
     public function actionCreate()
     {
-        if (Yii::$app->user->can('gestorTipoTransacao')) {
-            $model = new TipoTransacao();
+        $model = new TipoTransacao();
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                return $this->redirect(['view', 'id' => $model->id]);
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         } else {
-            return $this->redirect(['error']);
+            $model->loadDefaultValues();
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -105,20 +97,16 @@ class TipoTransacaoController extends Controller
      */
     public function actionUpdate($id)
     {
-        if (Yii::$app->user->can('gestorTipoTransacao')) {
-            $model = $this->findModel($id);
+        $model = $this->findModel($id);
 
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        } else {
-            return $this->redirect(['error']);
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -130,13 +118,9 @@ class TipoTransacaoController extends Controller
      */
     public function actionDelete($id)
     {
-        if (Yii::$app->user->can('gestorTipoTransacao')) {
-            $this->findModel($id)->delete();
-            Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
-            return $this->redirect(['index']);
-        } else {
-            return $this->redirect(['error']);
-        }
+        $this->findModel($id)->delete();
+        Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
+        return $this->redirect(['index']);
     }
 
     /**

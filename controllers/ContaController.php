@@ -8,6 +8,7 @@ use app\models\ContaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use lib\behaviors\AccessControl;
 
 /**
  * ContaController implements the CRUD actions for Conta model.
@@ -28,6 +29,9 @@ class ContaController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => AccessControl::class,
+                ],
             ]
         );
     }
@@ -39,17 +43,13 @@ class ContaController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->can('gestorConta')) {
-            $searchModel = new ContaSearch();
-            $dataProvider = $searchModel->search($this->request->queryParams);
+        $searchModel = new ContaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -60,13 +60,9 @@ class ContaController extends Controller
      */
     public function actionView($numero)
     {
-        if (Yii::$app->user->can('gestorConta')) {
-            return $this->render('view', [
-                'model' => $this->findModel($numero),
-            ]);
-        } else {
-            return $this->redirect(['error']);
-        }
+        return $this->render('view', [
+            'model' => $this->findModel($numero),
+        ]);
     }
 
     /**
@@ -76,24 +72,20 @@ class ContaController extends Controller
      */
     public function actionCreate()
     {
-        if (Yii::$app->user->can('gestorConta')) {
-            $model = new Conta();
+        $model = new Conta();
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                    return $this->redirect(['view', 'numero' => $model->numero]);
-                }
-            } else {
-                $model->loadDefaultValues();
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                return $this->redirect(['view', 'numero' => $model->numero]);
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         } else {
-            return $this->redirect(['error']);
+            $model->loadDefaultValues();
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -105,20 +97,16 @@ class ContaController extends Controller
      */
     public function actionUpdate($numero)
     {
-        if (Yii::$app->user->can('gestorConta')) {
-            $model = $this->findModel($numero);
+        $model = $this->findModel($numero);
 
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
-                return $this->redirect(['view', 'numero' => $model->numero]);
-            }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        } else {
-            return $this->redirect(['error']);
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Atualização realizada com sucesso');
+            return $this->redirect(['view', 'numero' => $model->numero]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -130,13 +118,9 @@ class ContaController extends Controller
      */
     public function actionDelete($numero)
     {
-        if (Yii::$app->user->can('gestorConta')) {
-            $this->findModel($numero)->delete();
-            Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
-            return $this->redirect(['index']);
-        } else {
-            return $this->redirect(['error']);
-        }
+        $this->findModel($numero)->delete();
+        Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
+        return $this->redirect(['index']);
     }
 
     /**

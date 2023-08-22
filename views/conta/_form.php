@@ -4,7 +4,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use yii\db\Query;
+use helpers\BancoHelper;
 
 /** @var yii\web\View $this */
 /** @var app\models\Conta $model */
@@ -19,8 +19,7 @@ use yii\db\Query;
     $form->field($model, 'tipo_conta_id')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['tipo_conta_id' => 'id', 'nome' => 'nome'])
-                    ->from('banco.tipo_conta')->all(),
+                BancoHelper::tipoContas(),
             ),
             'tipo_conta_id',
             'nome'
@@ -39,8 +38,7 @@ use yii\db\Query;
     $form->field($model, 'cliente_id')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['cliente_id' => 'id', 'nome' => 'nome'])
-                    ->from('banco.cliente')->all(),
+                BancoHelper::clientes()
             ),
             'cliente_id',
             'nome'

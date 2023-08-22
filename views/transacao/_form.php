@@ -1,13 +1,11 @@
 <?php
 
-use app\models\Conta;
+use helpers\BancoHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use kartik\file\FileInput;
-use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\Transacao $model */
@@ -22,8 +20,7 @@ use yii\helpers\Url;
     $form->field($model, 'tipo_transacao_id')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['tipo_transacao_id' => 'id', 'nome' => 'nome'])
-                    ->from('banco.tipo_transacao')->all(),
+                BancoHelper::tipoTransacoes()
             ),
             'tipo_transacao_id',
             'nome'
@@ -41,8 +38,7 @@ use yii\helpers\Url;
     <?= $form->field($model, 'conta_origem_numero')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['conta_numero' => 'numero', 'nome' => 'nome'])
-                    ->from('banco.conta')->join('inner join', 'banco.cliente', 'cliente_id = id')->all(),
+                BancoHelper::contas()
             ),
             'conta_numero',
             'nome'
@@ -58,8 +54,7 @@ use yii\helpers\Url;
     $form->field($model, 'conta_destino_numero')->widget(Select2::class, [
         'data' =>  ArrayHelper::map(
             array_filter(
-                (new Query())->select(['conta_numero' => 'numero', 'nome' => 'nome'])
-                    ->from('banco.conta')->join('inner join', 'banco.cliente', 'cliente_id = id')->all(),
+                BancoHelper::contas()
             ),
             'conta_numero',
             'nome'

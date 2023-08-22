@@ -132,7 +132,7 @@ class ContaController extends Controller
     {
         if (Yii::$app->user->can('gestorConta')) {
             $this->findModel($numero)->delete();
-
+            Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
             return $this->redirect(['index']);
         } else {
             return $this->redirect(['error']);

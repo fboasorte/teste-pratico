@@ -132,7 +132,7 @@ class ClienteController extends Controller
     {
         if (Yii::$app->user->can('gestorCliente')) {
             $this->findModel($id)->delete();
-
+            Yii::$app->session->setFlash('success', 'Registro excluido com sucesso');
             return $this->redirect(['index']);
         } else {
             return $this->redirect(['error']);

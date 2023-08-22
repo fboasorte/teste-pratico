@@ -4,7 +4,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use helpers\BancoHelper;
+use lib\helpers\BancoHelper;
 
 /** @var yii\web\View $this */
 /** @var app\models\Conta $model */

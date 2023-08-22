@@ -1,6 +1,6 @@
 <?php
 
-namespace helpers;
+namespace lib\helpers;
 
 use yii\db\Query;
 

@@ -1,6 +1,6 @@
 <?php
 
-use helpers\BancoHelper;
+use lib\helpers\BancoHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;

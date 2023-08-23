@@ -83,10 +83,10 @@ class Transacao extends \yii\db\ActiveRecord
         return $this->hasOne(Conta::class, ['numero' => 'conta_destino_numero']);
     }
 
-    public function upload()
+    public function upload($nome)
     {
         if ($this->validate()) {
-            $this->arquivo->saveAs(Yii::getAlias('@arquivos') . '/' . $this->arquivo->baseName . '.' . $this->arquivo->extension);
+            $this->arquivo->saveAs(Yii::getAlias('@arquivos') . '/' . $nome . '.' . $this->arquivo->extension);
             return true;
         } else {
             return false;
@@ -119,5 +119,12 @@ class Transacao extends \yii\db\ActiveRecord
     public function podeSerRealizada(){
         $contaOrigem = Conta::findOne(['numero' => $this->conta_origem_numero]);
         return $contaOrigem->possuiSaldo($this->valor);
+    }
+
+    public function gerarHash(){
+        $bytes = random_bytes(15);
+        while (file_exists(Yii::getAlias('@arquivos') . bin2hex($bytes)))
+            $bytes = random_bytes(15);
+        return strtoupper(bin2hex($bytes));
     }
 }

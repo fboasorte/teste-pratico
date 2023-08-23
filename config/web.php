@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 use     kartik\datecontrol\Module;
 
-Yii::setAlias('arquivos', dirname(__DIR__) . '/arquivos');
+Yii::setAlias('arquivos', dirname(__DIR__) . '/arquivos/');
 
 Yii::$classMap['lib\helpers\BancoHelper'] = '@app/lib/helpers/BancoHelper.php';
 Yii::$classMap['lib\behaviors\AccessControl'] = '@app/lib/behaviors/AccessControl.php';

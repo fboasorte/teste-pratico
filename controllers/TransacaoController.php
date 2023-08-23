@@ -99,13 +99,15 @@ class TransacaoController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $model->arquivo = UploadedFile::getInstance($model, 'comprovante');
-                $model->upload();
-                $model->comprovante = $model->arquivo->baseName . '.' . $model->arquivo->extension;
+                $hashArquivo = $model->gerarHash();
+                if ($model->upload($hashArquivo)) {
+                    $model->comprovante = $hashArquivo . '.' . $model->arquivo->extension;
 
-                if ($model->save() && $model->transfereValor()) {
-                    $transaction->commit();
-                    Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    if ($model->save() && $model->transfereValor()) {
+                        $transaction->commit();
+                        Yii::$app->session->setFlash('success', 'Cadastro realizado com sucesso');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
                 }
             } catch (Exception $ex) {
                 $transaction->rollBack();

@@ -14,6 +14,7 @@ class m230819_180707_cria_permissoes extends Migration
         'tipo-conta/update',
         'tipo-conta/create',
         'tipo-conta/view',
+        'tipo-conta/delete',
     ];
 
     public $rotas_tipo_transacao = [
@@ -21,6 +22,7 @@ class m230819_180707_cria_permissoes extends Migration
         'tipo-transacao/update',
         'tipo-transacao/create',
         'tipo-transacao/view',
+        'tipo-transacao/delete',
     ];
 
     public $rotas_conta = [
@@ -28,6 +30,7 @@ class m230819_180707_cria_permissoes extends Migration
         'conta/update',
         'conta/create',
         'conta/view',
+        'conta/delete',
     ];
 
     public $rotas_cliente = [
@@ -35,6 +38,7 @@ class m230819_180707_cria_permissoes extends Migration
         'cliente/update',
         'cliente/create',
         'cliente/view',
+        'cliente/delete',
     ];
 
     public $rotas_transacao = [
@@ -42,6 +46,7 @@ class m230819_180707_cria_permissoes extends Migration
         'transacao/update',
         'transacao/create',
         'transacao/view',
+        'transacao/delete',
     ];
 
     /**
